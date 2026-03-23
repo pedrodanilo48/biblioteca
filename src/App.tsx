@@ -1,14 +1,22 @@
-import { useState } from 'react'
-import './App.css'
-import type { Item } from './types'
+import { useState, useEffect } from 'react';
+import type { Item } from './types';
 
 function App() {
-  const [items, setItems] = useState<Item[]>([]);
+  // Inicializamos o estado. Dica: você pode inicializar direto do localStorage 
+  // para evitar o "flash" de lista vazia no carregamento.
+  const [items, setItems] = useState<Item[]>(() => {
+    const saved = localStorage.getItem('minha-lista-crud');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [inputValue, setInputValue] = useState('');
 
-  // CREATE
+  // Sincronização automática com localStorage
+  useEffect(() => {
+    localStorage.setItem('minha-lista-crud', JSON.stringify(items));
+  }, [items]);
+
   const addItem = () => {
-    if (!inputValue) return;
+    if (!inputValue.trim()) return;
     const newItem: Item = {
       id: Date.now(),
       title: inputValue,
@@ -18,46 +26,43 @@ function App() {
     setInputValue('');
   };
 
-  // DELETE
   const deleteItem = (id: number) => {
     setItems(items.filter(item => item.id !== id));
   };
 
-  // UPDATE (Toggle status)
-  const toggleComplete = (id: number) => {
-    setItems(items.map(item => 
-      item.id === id ? { ...item, completed: !item.completed } : item
-    ));
-  };
-
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Meu CRUD com Vite</h1>
-      
-      {/* Input de Criação */}
-      <input 
-        value={inputValue} 
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Nova tarefa..."
-      />
-      <button onClick={addItem}>Adicionar</button>
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Gerenciador de Tarefas</h1>
+      <div className="flex gap-2 mb-6">
+        <input 
+          className="border p-2 rounded"
+          value={inputValue} 
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="O que precisa ser feito?"
+        />
+        <button 
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+          onClick={addItem}
+        >
+          Salvar
+        </button>
+      </div>
 
-      {/* READ (Listagem) */}
-      <ul>
+      <ul className="space-y-2">
         {items.map(item => (
-          <li key={item.id}>
-            <span 
-              onClick={() => toggleComplete(item.id)}
-              style={{ textDecoration: item.completed ? 'line-through' : 'none', cursor: 'pointer' }}
+          <li key={item.id} className="flex justify-between items-center bg-gray-50 p-3 rounded shadow-sm">
+            <span>{item.title}</span>
+            <button 
+              className="text-red-500 hover:underline"
+              onClick={() => deleteItem(item.id)}
             >
-              {item.title}
-            </span>
-            <button onClick={() => deleteItem(item.id)}>Excluir</button>
+              Excluir
+            </button>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
