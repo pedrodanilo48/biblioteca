@@ -9,6 +9,8 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
   const [inputValue, setInputValue] = useState('');
+  //preciso entender como funciona o useEffect para sincronizar o estado com o localStorage.
+  //também preciso o que é o JSON.stringify e JSON.parse, e como eles ajudam a armazenar objetos complexos no localStorage, que só aceita strings.
 
   // Sincronização automática com localStorage
   useEffect(() => {
