@@ -11,7 +11,7 @@ function App() {
   const [inputValue, setInputValue] = useState('');
   //preciso entender como funciona o useEffect para sincronizar o estado com o localStorage.
   //também preciso o que é o JSON.stringify e JSON.parse, e como eles ajudam a armazenar objetos complexos no localStorage, que só aceita strings.
-
+  //fora isso, também preciso saber o que é localStorage e como ele funciona para armazenar dados no navegador, e como ele pode ser usado para persistir o estado da aplicação mesmo após o usuário fechar a aba ou o <navegador className=""></navegador>
   // Sincronização automática com localStorage
   useEffect(() => {
     localStorage.setItem('minha-lista-crud', JSON.stringify(items));
