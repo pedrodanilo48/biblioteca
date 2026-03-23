@@ -56,7 +56,7 @@ function App() {
               className="text-red-500 hover:underline"
               onClick={() => deleteItem(item.id)}
             >
-              Excluir
+              Deletar
             </button>
           </li>
         ))}
